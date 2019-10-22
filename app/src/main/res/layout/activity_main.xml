@@ -35,7 +35,7 @@
             android:id="@+id/main_activity_button_add_task"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_all_tasks_main_activity" />
+            android:text="@string/button_add_task_add_task" />
 
         <View
             android:layout_width="0dp"
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:text="@string/button_add_task_main_activity" />
+            android:text="@string/button_all_tasks_main_activity" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
