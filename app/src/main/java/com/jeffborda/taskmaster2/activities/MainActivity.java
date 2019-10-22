@@ -1,8 +1,10 @@
-package com.jeffborda.taskmaster2;
+package com.jeffborda.taskmaster2.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.jeffborda.taskmaster2.R;
 
 public class MainActivity extends AppCompatActivity {
 

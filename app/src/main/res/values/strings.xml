@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">taskmaster2</string>
+
+    <!-- Main Activity -->
+    <string name="heading_main_activity">My Tasks</string>
+    <string name="button_add_task_main_activity">Add Task</string>
+    <string name="button_all_tasks_main_activity">All Tasks</string>
+
+    <!-- Add Task -->
+    <string name="heading_add_task">Add Task</string>
+
+    <!-- All Tasks -->
+    <string name="heading_all_tasks">All Tasks</string>
 </resources>
