@@ -13,6 +13,7 @@
     <string name="task_title_hint">Take Out Garbage</string>
     <string name="task_description">Task Description</string>
     <string name="task_description_hint">Recycle and garabage.</string>
+    <string name="task_counter_text">Total Tasks: </string>
 
 
     <!-- All Tasks -->

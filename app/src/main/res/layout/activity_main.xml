@@ -29,13 +29,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/heading_main_activity">
+        app:layout_constraintTop_toBottomOf="@+id/heading_main_activity"
+        app:layout_constraintVertical_bias="0.901">
 
         <Button
             android:id="@+id/main_activity_button_add_task"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_add_task_add_task" />
+            android:background="#1e78d9"
+            android:text="@string/button_add_task_add_task"
+            android:textColor="@android:color/white" />
 
         <View
             android:layout_width="0dp"
@@ -47,7 +50,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:text="@string/button_all_tasks_main_activity" />
+            android:background="#1e78d9"
+            android:text="@string/button_all_tasks_main_activity"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
