@@ -6,4 +6,52 @@
     android:layout_height="match_parent"
     tools:context=".activities.TaskDetails">
 
+    <TextView
+        android:id="@+id/heading_task_details"
+        android:layout_width="177dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="@string/heading_task_details"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.044" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="128dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/heading_add_task">
+
+        <TextView
+            android:id="@+id/task_details_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="@string/task_details_title" />
+
+        <TextView
+            android:id="@+id/task_details_details"
+            android:layout_width="match_parent"
+            android:layout_height="86dp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="@string/task_details_details_text" />
+
+    </LinearLayout>
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

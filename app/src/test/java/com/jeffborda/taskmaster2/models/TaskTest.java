@@ -24,6 +24,11 @@ public class TaskTest {
     }
 
     @Test
+    public void getTaskStateTest() {
+        assertEquals(TaskState.NEW, testTask.getTaskState());
+    }
+
+    @Test
     public void setTitleTest() {
         testTask.setTitle("New title");
         assertEquals("New title", testTask.getTitle());
@@ -36,9 +41,15 @@ public class TaskTest {
     }
 
     @Test
+    public void setTestTaskTest() {
+        testTask.setTaskState(TaskState.ASSIGNED);
+        assertEquals(TaskState.ASSIGNED, testTask.getTaskState());
+    }
+
+    @Test
     public void toStringTest() {
         Task task = new Task("title", "description");
-        String expected = "TITLE: title DESCRIPTION: description";
+        String expected = "TITLE: title DESCRIPTION: description STATE: NEW";
         assertEquals(expected, task.toString());
     }
 }
