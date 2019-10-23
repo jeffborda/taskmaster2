@@ -21,6 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.044" />
 
+    <!--  style="?android:attr/buttonBarButtonStyle" put on parent and buttons per Android Studio warning  -->
     <LinearLayout
         android:id="@+id/button_container_main_activity"
         android:layout_width="307dp"
@@ -30,29 +31,42 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/heading_main_activity"
-        app:layout_constraintVertical_bias="0.901">
+        app:layout_constraintVertical_bias="0.901"
+        style="?android:attr/buttonBarStyle">
 
+        <!-- To evenly space button inside horizontal linear layout: -->
+        <!-- layout_height="wrap_content", layout_width="0dp", layout_weight="1.0" -->
         <Button
             android:id="@+id/main_activity_button_add_task"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
             android:background="#1e78d9"
             android:text="@string/button_add_task_add_task"
-            android:textColor="@android:color/white" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:textColor="@android:color/white"
+            style="?android:attr/buttonBarButtonStyle"/>
 
         <Button
             android:id="@+id/main_activity_button_all_tasks"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
             android:layout_gravity="end"
             android:background="#1e78d9"
             android:text="@string/button_all_tasks_main_activity"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            style="?android:attr/buttonBarButtonStyle"/>
+
+        <Button
+            android:id="@+id/main_activity_button_settings"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:background="#1e78d9"
+            android:textColor="@android:color/white"
+            android:text="@string/button_settings_main_activity"
+            style="?android:attr/buttonBarButtonStyle"/>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

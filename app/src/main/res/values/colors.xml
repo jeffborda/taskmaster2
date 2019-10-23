@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+<!-- This is where you can change the app colors -->
+
+    <!-- Primary Blue color for the app-->
     <color name="colorPrimary">#1e78d9</color>
+    <!-- Royal Blue -->
     <color name="colorPrimaryDark">#03256c</color>
+    <!-- Cyan-->
     <color name="colorAccent">#06bee1</color>
+    <!-- Alternate Color, Denim Blue: #2541b2-->
 </resources>
