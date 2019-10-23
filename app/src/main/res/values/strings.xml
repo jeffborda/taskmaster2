@@ -4,6 +4,7 @@
     <!-- Main Activity -->
     <string name="heading_main_activity">My Tasks</string>
     <string name="heading_with_username_main_activity">\'s Tasks</string>
+    <string name="button_home">Home</string>
     <string name="button_add_task_main_activity">Add Task</string>
     <string name="button_all_tasks_main_activity">All Tasks</string>
     <string name="button_settings_main_activity">Settings</string>
