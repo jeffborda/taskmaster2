@@ -14,9 +14,13 @@ import android.widget.TextView;
 import com.jeffborda.taskmaster2.R;
 import com.jeffborda.taskmaster2.models.Task;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private List<Task> tasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
         Task task1 = new Task("Take out garbage", "Recycling and compost");
         Task task2 = new Task("Grade labs", "By 8:00pm");
         Task task3 = new Task("Give Scout a bath", "Tomorrow");
+        this.tasks = new LinkedList<>();
+        this.tasks.add(task1);
+        this.tasks.add(task2);
+        this.tasks.add(task3);
         taskButton1.setText(task1.getTitle());
         taskButton2.setText(task2.getTitle());
         taskButton3.setText(task3.getTitle());
