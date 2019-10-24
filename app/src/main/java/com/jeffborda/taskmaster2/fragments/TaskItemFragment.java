@@ -75,14 +75,16 @@ public class TaskItemFragment extends Fragment {
         }
     }
 
+    // TODO: Implementing this method will allow the fragment to communicate w/ the activity which called it.
+    // See class video [2:34:00] https://frontrowviews.com/Home/Event/Play/5d76a96cbdb9b10d0cb5cdf7
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
         }
     }
 
