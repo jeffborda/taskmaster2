@@ -20,7 +20,7 @@ import com.jeffborda.taskmaster2.models.Task;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TaskItemAdapter.OnTaskSelectedListener {
 
     private static final String TAG = "MainActivity";
     private List<Task> tasks;
@@ -114,7 +114,9 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.task_items_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         // Define Adapter class that is able to communicate with RecyclerView
-        recyclerView.setAdapter(new TaskItemAdapter);
+        recyclerView.setAdapter(new TaskItemAdapter(this.tasks, this));
+
+        // Create method like onTaskSelect() - to handle the interaction
 
         Task task1 = new Task("Take out garbage", "Recycling and compost");
         Task task2 = new Task("Grade labs", "By 8:00pm");
@@ -152,7 +154,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void goToTaskDetails(View view) {
-
+    @Override
+    public void onTaskSelected(Task task) {
+        Log.i(TAG, "Task3 button clicked.");
+//        Intent taskDetailsIntent = new Intent(this, TaskDetails.class);
+//        taskDetailsIntent.putExtra("taskTitle", taskButton3.getText().toString());
+//        startActivity(taskDetailsIntent);
     }
 }

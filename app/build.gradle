@@ -32,5 +32,4 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.2.0'
     // Added for RecyclerView
     implementation 'com.android.support:recyclerview-v7:28.0.0'
-
 }

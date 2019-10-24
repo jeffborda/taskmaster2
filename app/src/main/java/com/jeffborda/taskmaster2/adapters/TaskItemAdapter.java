@@ -1,20 +1,42 @@
 package com.jeffborda.taskmaster2.adapters;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.jeffborda.taskmaster2.R;
+import com.jeffborda.taskmaster2.models.Task;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class TaskItemAdapter extends RecyclerView.Adapter {
+public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder> {
+
+    public List<Task> tasks;
+    private OnTaskSelectedListener listener;
+
+    public TaskItemAdapter(List<Task> tasks, OnTaskSelectedListener listener) {
+        this.tasks = tasks;
+        this.listener = listener;
+    }
 
     // The ViewHolder class holds on to the Fragment that we have created
     // Holds on to view data that we need
     // This is just an inner class, could be put in its own file
     public static class TaskItemViewHolder extends RecyclerView.ViewHolder {
 
+        TextView taskTitleView;
+        TextView taskDescriptionView;
+
+        // The View that is taken in here is a TaskItem Fragment
         public TaskItemViewHolder(@NonNull View itemView) {
             super(itemView);
+            // Set the text/values of all the views in the fragment
+            this.taskTitleView = itemView.findViewById(R.id.fragment_task_item_title);
+            this.taskDescriptionView = itemView.findViewById(R.id.fragment_task_item_description);
         }
     }
 
@@ -22,19 +44,28 @@ public class TaskItemAdapter extends RecyclerView.Adapter {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+    public TaskItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Reference the fragment that will be used
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_task_item, parent, false);
+        TaskItemViewHolder holder = new TaskItemViewHolder(view);
+        return holder;
     }
 
     // RecyclerView has a row (maybe previously used) that needs to be updated for a particular location/index
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull TaskItemViewHolder holder, int position) {
+        Task taskAtPosition = this.tasks.get(position);
+        holder.taskTitleView.setText(taskAtPosition.getTitle());
+        holder.taskDescriptionView.setText(taskAtPosition.getTitle());
     }
 
     // TODO: Change this with to return list.size()
     @Override
     public int getItemCount() {
-        return 3;
+        return tasks.size();
+    }
+
+    public static interface OnTaskSelectedListener {
+        void onTaskSelected(Task task);
     }
 }
