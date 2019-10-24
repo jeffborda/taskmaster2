@@ -28,6 +28,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
     // This is just an inner class, could be put in its own file
     public static class TaskItemViewHolder extends RecyclerView.ViewHolder {
 
+        Task task;
         TextView taskTitleView;
         TextView taskDescriptionView;
 
@@ -41,13 +42,19 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
     }
 
     // RecyclerView needs us to create a new row, from scratch, for holding data
-
     @NonNull
     @Override
     public TaskItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Reference the fragment that will be used
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_task_item, parent, false);
-        TaskItemViewHolder holder = new TaskItemViewHolder(view);
+        final TaskItemViewHolder holder = new TaskItemViewHolder(view);
+        // Do this to attach onClickListener to each fragment in RecyclerView
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onTaskSelected(holder.task);
+            }
+        });
         return holder;
     }
 
@@ -56,16 +63,15 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
     public void onBindViewHolder(@NonNull TaskItemViewHolder holder, int position) {
         Task taskAtPosition = this.tasks.get(position);
         holder.taskTitleView.setText(taskAtPosition.getTitle());
-        holder.taskDescriptionView.setText(taskAtPosition.getTitle());
+        holder.taskDescriptionView.setText(taskAtPosition.getDescription());
     }
 
-    // TODO: Change this with to return list.size()
     @Override
     public int getItemCount() {
         return tasks.size();
     }
 
-    public static interface OnTaskSelectedListener {
+    public interface OnTaskSelectedListener {
         void onTaskSelected(Task task);
     }
 }
