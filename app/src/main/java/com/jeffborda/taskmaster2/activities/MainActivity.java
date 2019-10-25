@@ -79,13 +79,6 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
         // Define Adapter class that is able to communicate with RecyclerView
         recyclerView.setAdapter(new TaskItemAdapter(this.tasks, this));
 
-        // Create method like onTaskSelect() - to handle the interaction
-
-
-
-
-
-
 
 
     }
@@ -113,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
 
     @Override
     public void onTaskSelected(Task task) {
-        Log.i(TAG, "RecyclerView TextView clicked.");
+        Log.i(TAG, "RecyclerView TextView clicked on this Task: " + task);
         Intent taskDetailsIntent = new Intent(this, TaskDetails.class);
         taskDetailsIntent.putExtra("taskTitle", task.getTitle());
         taskDetailsIntent.putExtra("taskDescription", task.getDescription());

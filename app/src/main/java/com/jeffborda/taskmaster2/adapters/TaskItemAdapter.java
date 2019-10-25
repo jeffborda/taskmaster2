@@ -62,6 +62,8 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
     @Override
     public void onBindViewHolder(@NonNull TaskItemViewHolder holder, int position) {
         Task taskAtPosition = this.tasks.get(position);
+        // Set the reference of which Task
+        holder.task = taskAtPosition;
         holder.taskTitleView.setText(taskAtPosition.getTitle());
         holder.taskDescriptionView.setText(taskAtPosition.getDescription());
     }
