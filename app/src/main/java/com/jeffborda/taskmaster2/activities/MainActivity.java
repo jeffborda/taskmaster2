@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.jeffborda.taskmaster2.R;
 import com.jeffborda.taskmaster2.adapters.TaskItemAdapter;
 import com.jeffborda.taskmaster2.models.Task;
+import com.jeffborda.taskmaster2.models.TaskmasterDatabase;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,12 +25,16 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements TaskItemAdapter.OnTaskSelectedListener {
 
     private static final String TAG = "MainActivity";
+    private TaskmasterDatabase database;
     private List<Task> tasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, "taskmaster_database").allowMainThreadQueries().build();
+        this.tasks = new LinkedList<>();
 
         // Reference the button using its ID
         // Add event listener to the button
@@ -65,12 +71,13 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
         // TODO: Setup the RecyclerView
         // Give the tasks List a few Tasks to render
         Task task1 = new Task("Take out garbage", "Recycling and compost");
-        Task task2 = new Task("Grade labs", "By 8:00pm");
-        Task task3 = new Task("Give Scout a bath", "Tomorrow");
-        this.tasks = new LinkedList<>();
-        this.tasks.add(task1);
-        this.tasks.add(task2);
-        this.tasks.add(task3);
+//        Task task2 = new Task("Grade labs", "By 8:00pm");
+//        Task task3 = new Task("Give Scout a bath", "Tomorrow");
+
+        // Get everything from database and to the list of tasks to be rendered by recycler view
+        this.tasks.addAll(this.database.taskDao().getAll());
+
+
 
         // Re: https://developer.android.com/guide/topics/ui/layout/recyclerview
         // Render Task items to the screen with RecyclerView

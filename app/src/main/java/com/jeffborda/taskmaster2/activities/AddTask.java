@@ -1,6 +1,7 @@
 package com.jeffborda.taskmaster2.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,18 +17,22 @@ import android.widget.Toast;
 
 import com.jeffborda.taskmaster2.R;
 import com.jeffborda.taskmaster2.models.Task;
+import com.jeffborda.taskmaster2.models.TaskmasterDatabase;
 
 public class AddTask extends AppCompatActivity {
 
     private static final String TAG = "AddTask";
+    private TaskmasterDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
+        this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, "taskmaster_database").allowMainThreadQueries().build();
+
         TextView taskCounter = findViewById(R.id.addtask_task_counter);
-        //TODO: Change the int variable that is being appended to the TextView taskCounter
+        //TODO: Change the int variable that is being appended to the TextView taskCounter to reflect the actual number in database
         taskCounter.append(Integer.toString(0));
 
         final Button addTaskButton = findViewById(R.id.add_task_button);
@@ -64,6 +69,9 @@ public class AddTask extends AppCompatActivity {
         String title = titleEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
         Task task = new Task(title, description);
+        // Add the new Task to the database
+        database.taskDao().addTask(task);
+
         Log.i(TAG, String.format("Made new Task: %s", task));
         //TODO: Save the task somewhere
     }

@@ -1,8 +1,10 @@
 package com.jeffborda.taskmaster2.models;
 
 import androidx.annotation.NonNull;
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 @Entity
 public class Task {
@@ -11,6 +13,7 @@ public class Task {
     private long id;
     private String title;
     private String description;
+    @TypeConverters(TaskStateConverter.class)
     private TaskState taskState;
 
     // If TaskState is not taken in the constructor, it is set to NEW

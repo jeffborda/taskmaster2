@@ -1,5 +1,16 @@
 package com.jeffborda.taskmaster2.models;
 
 public enum TaskState {
-    NEW, ASSIGNED, IN_PROGRESS, COMPLETE;
+    NEW(0), ASSIGNED(1), IN_PROGRESS(2), COMPLETE(3);
+
+    private int statusCode;
+
+    TaskState(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public int getStatusCode() {
+        return this.statusCode;
+    }
+
 }
