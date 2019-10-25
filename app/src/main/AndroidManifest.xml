@@ -9,11 +9,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.AllTasks"
-                  android:parentActivityName=".activities.MainActivity" />
-
-        <activity android:name=".activities.AddTask"
-                  android:parentActivityName=".activities.MainActivity"/>
 
         <activity android:name=".activities.MainActivity">
             <intent-filter>
@@ -22,6 +17,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.AddTask"
+            android:parentActivityName=".activities.MainActivity" />
+
+        <activity
+            android:name=".activities.AllTasks"
+            android:parentActivityName=".activities.MainActivity" />
+
+        <activity
+            android:name=".activities.Settings"
+            android:parentActivityName=".activities.MainActivity"/>
+
+        <activity
+            android:name=".activities.TaskDetails"
+            android:parentActivityName=".activities.MainActivity"/>
+
     </application>
 
 </manifest>

@@ -2,9 +2,12 @@
     <string name="app_name">taskmaster2</string>
 
     <!-- Main Activity -->
-    <string name="heading_main_activity">My Tasks</string>
+    <string name="heading_without_username_main_activity">My Tasks</string>
+    <string name="heading_with_username_main_activity">\'s Tasks</string>
+    <string name="button_home">Home</string>
     <string name="button_add_task_main_activity">Add Task</string>
     <string name="button_all_tasks_main_activity">All Tasks</string>
+    <string name="button_settings_main_activity">Settings</string>
 
     <!-- Add Task -->
     <string name="heading_add_task">Add Task</string>
@@ -12,10 +15,30 @@
     <string name="task_title">Task Title</string>
     <string name="task_title_hint">Take Out Garbage</string>
     <string name="task_description">Task Description</string>
-    <string name="task_description_hint">Recycle and garabage.</string>
+    <string name="task_description_hint">Recycle and garbage.</string>
     <string name="task_counter_text">Total Tasks: </string>
+    <string name="toast_no_title">Tasks must have a title.</string>
+    <string name="toast_task_added_success">Task added!</string>
 
 
     <!-- All Tasks -->
     <string name="heading_all_tasks">All Tasks</string>
+
+    <!-- Settings -->
+    <string name="heading_settings">Settings</string>
+    <string name="username_input_label_text">Enter your username</string>
+    <string name="username_field_hint">Username</string>
+    <string name="update_username_button_text">Update</string>
+    <string name="toast_no_username">Username cannot be blank.</string>
+    <string name="toast_username_updated_success">Username updated!</string>
+
+    <!-- Task Details -->
+    <string name="heading_task_details">Task Title</string>
+    <string name="task_details_title">Task Title</string>
+    <string name="task_details_details_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+
+    <!-- Task Item Fragment -->
+    <string name="fragment_task_item_title_text">Task Item Title</string>
+    <string name="fragment_task_item_description_text">No task description.</string>
+
 </resources>
