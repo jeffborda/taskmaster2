@@ -1,9 +1,14 @@
 package com.jeffborda.taskmaster2.models;
 
 import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity
 public class Task {
 
+    @PrimaryKey(autoGenerate = true)
+    private long id;
     private String title;
     private String description;
     private TaskState taskState;
@@ -24,6 +29,10 @@ public class Task {
 
     public Task() { }
 
+    public long getId() {
+        return this.id;
+    }
+
     public String getTitle() {
         return this.title;
     }
@@ -34,6 +43,10 @@ public class Task {
 
     public TaskState getTaskState() {
         return this.taskState;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     void setTitle(String title) {
