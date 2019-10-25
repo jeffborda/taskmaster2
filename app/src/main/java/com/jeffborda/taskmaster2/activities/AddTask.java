@@ -29,7 +29,7 @@ public class AddTask extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
-        this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, "taskmaster_database").allowMainThreadQueries().build();
+        this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, getString(R.string.database_name)).allowMainThreadQueries().build();
 
         TextView taskCounter = findViewById(R.id.addtask_task_counter);
         //TODO: Change the int variable that is being appended to the TextView taskCounter to reflect the actual number in database
@@ -54,8 +54,7 @@ public class AddTask extends AppCompatActivity {
                     addNewTask();
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_task_added_success),Toast.LENGTH_LONG).show();
                     // Send back to MainActivity after adding a Task
-                    Intent mainActivityIntent = new Intent(AddTask.this, MainActivity.class);
-                    startActivity(mainActivityIntent);
+                    AddTask.this.finish();
                 }
             }
         });
