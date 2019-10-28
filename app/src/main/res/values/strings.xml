@@ -41,4 +41,7 @@
     <string name="fragment_task_item_title_text">Task Item Title</string>
     <string name="fragment_task_item_description_text">No task description.</string>
 
+    <!-- Resource Strings-->
+    <string name="database_name">taskmaster_database</string>
+
 </resources>

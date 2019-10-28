@@ -19,6 +19,8 @@ android {
 }
 
 dependencies {
+    // Added to declare Room version
+    def room_version = "2.2.1"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -32,4 +34,8 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.2.0'
     // Added for RecyclerView
     implementation 'com.android.support:recyclerview-v7:28.0.0'
+    // Added to use Room api
+    implementation "androidx.room:room-runtime:$room_version"
+    // Added for room
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 }

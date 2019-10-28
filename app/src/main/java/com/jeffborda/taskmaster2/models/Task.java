@@ -1,11 +1,19 @@
 package com.jeffborda.taskmaster2.models;
 
 import androidx.annotation.NonNull;
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
+@Entity
 public class Task {
 
+    @PrimaryKey(autoGenerate = true)
+    private long id;
     private String title;
     private String description;
+    @TypeConverters(TaskStateConverter.class)
     private TaskState taskState;
 
     // If TaskState is not taken in the constructor, it is set to NEW
@@ -24,6 +32,10 @@ public class Task {
 
     public Task() { }
 
+    public long getId() {
+        return this.id;
+    }
+
     public String getTitle() {
         return this.title;
     }
@@ -34,6 +46,10 @@ public class Task {
 
     public TaskState getTaskState() {
         return this.taskState;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     void setTitle(String title) {
