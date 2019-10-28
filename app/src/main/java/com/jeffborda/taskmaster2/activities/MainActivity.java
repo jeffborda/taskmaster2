@@ -33,24 +33,11 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Build the database and instantiate the List that hold the tasks from database
-        this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, getString(R.string.database_name))
-                // fallbackToDestructiveMigration will delete all entries from the database if the schema changes
-                .fallbackToDestructiveMigration()
-                .allowMainThreadQueries()
-                .build();
-        this.tasks = new LinkedList<>();
 
-        // Get everything from database and put in list of tasks to be rendered by recycler view
-        this.tasks.addAll(this.database.taskDao().getAll());
+        this.renderRecyclerViewFromDatabase();
 
-        // Re android doc: https://developer.android.com/guide/topics/ui/layout/recyclerview
-        // Render Task items to the screen with RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.task_items_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        // Define Adapter class that is able to communicate with RecyclerView
-        recyclerView.setAdapter(new TaskItemAdapter(this.tasks, this));
 
+        // Button Setup
         // Reference the button using its ID
         // Add event listener to the button
         Button addTaskButton = findViewById(R.id.main_activity_button_add_task);
@@ -102,24 +89,7 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
             mainActivityHeading.setText(username + getResources().getString(R.string.heading_with_username_main_activity));
         }
 
-        //TODO: Check for a more efficient way to update the RecyclerView after one or more things
-        //      have been added to the database on the AddTask activity.
-
-        // Get the database and set the RecyclerView again after an update
-        // Build the database and instantiate the List that hold the tasks from database
-
-        //TODO: Add "taskmaster_database" to the strings xml
-        this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, getString(R.string.database_name))
-                // fallbackToDestructiveMigration will delete all entries from the database if the schema changes
-                .fallbackToDestructiveMigration()
-                .allowMainThreadQueries()
-                .build();
-        this.tasks = new LinkedList<>();
-        this.tasks.addAll(this.database.taskDao().getAll());
-        RecyclerView recyclerView = findViewById(R.id.task_items_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new TaskItemAdapter(this.tasks, this));
-
+        this.renderRecyclerViewFromDatabase();
     }
 
     @Override
@@ -129,5 +99,25 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
         taskDetailsIntent.putExtra("taskTitle", task.getTitle());
         taskDetailsIntent.putExtra("taskDescription", task.getDescription());
         MainActivity.this.startActivity(taskDetailsIntent);
+    }
+
+    private void renderRecyclerViewFromDatabase() {
+        // Build the database and instantiate the List that hold the tasks from database
+        this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, getString(R.string.database_name))
+                // fallbackToDestructiveMigration will delete all entries from the database if the schema changes
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
+        this.tasks = new LinkedList<>();
+
+        // Get everything from database and put in list of tasks to be rendered by recycler view
+        this.tasks.addAll(this.database.taskDao().getAll());
+
+        // Re android doc: https://developer.android.com/guide/topics/ui/layout/recyclerview
+        // Render Task items to the screen with RecyclerView
+        RecyclerView recyclerView = findViewById(R.id.task_items_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // Define Adapter class that is able to communicate with RecyclerView
+        recyclerView.setAdapter(new TaskItemAdapter(this.tasks, this));
     }
 }
