@@ -2,7 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jeffborda.taskmaster2">
 
+    <!-- To get internet permission from user -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- android:usesCleartextTraffic="true" allows us to make requests to http address, not just https  -->
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -33,7 +38,7 @@
         <activity
             android:name=".activities.TaskDetails"
             android:parentActivityName=".activities.MainActivity"
-            android:windowSoftInputMode="adjustResize   "/>
+            android:windowSoftInputMode="adjustResize"/>
             <!-- can add '|stateHidden' to the windowSoftInputMode to make the save button disappear, but not sure how to make it reappear -->
 
     </application>
