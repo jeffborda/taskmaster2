@@ -1,8 +1,8 @@
 package com.jeffborda.taskmaster2.models;
 
 import androidx.annotation.NonNull;
-import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -17,6 +17,7 @@ public class Task {
     private TaskState taskState;
 
     // If TaskState is not taken in the constructor, it is set to NEW
+    @Ignore /* This tells Room to ignore this constructor */
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
@@ -24,6 +25,7 @@ public class Task {
     }
 
     // Alternate constructor to take in a TaskState
+    @Ignore /* This tells Room to ignore this constructor */
     public Task(String title, String description, TaskState taskState) {
         this.title = title;
         this.description = description;

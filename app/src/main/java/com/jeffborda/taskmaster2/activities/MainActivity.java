@@ -96,8 +96,8 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
     public void onTaskSelected(Task task) {
         Log.i(TAG, "RecyclerView TextView clicked on this Task: " + task);
         Intent taskDetailsIntent = new Intent(this, TaskDetails.class);
-        taskDetailsIntent.putExtra("taskTitle", task.getTitle());
-        taskDetailsIntent.putExtra("taskDescription", task.getDescription());
+        // When a Task is clicked, put its ID as an extra so it can be pulled out of database on TaskDetails activity
+        taskDetailsIntent.putExtra("task_id", task.getId());
         MainActivity.this.startActivity(taskDetailsIntent);
     }
 

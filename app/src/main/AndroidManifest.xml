@@ -32,7 +32,9 @@
 
         <activity
             android:name=".activities.TaskDetails"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".activities.MainActivity"
+            android:windowSoftInputMode="adjustResize   "/>
+            <!-- can add '|stateHidden' to the windowSoftInputMode to make the save button disappear, but not sure how to make it reappear -->
 
     </application>
 

@@ -35,7 +35,9 @@
     <!-- Task Details -->
     <string name="heading_task_details">Task Title</string>
     <string name="task_details_title">Task Title</string>
-    <string name="task_details_details_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="task_details_description">Task Details</string>
+    <string name="task_details_state">NEW</string>
+    <string name="task_details_save_button_text">SAVE</string>
 
     <!-- Task Item Fragment -->
     <string name="fragment_task_item_title_text">Task Item Title</string>
