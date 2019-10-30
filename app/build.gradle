@@ -38,4 +38,10 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     // Added for room
     annotationProcessor "androidx.room:room-compiler:$room_version"
+    // Added for handling http requests
+    implementation 'com.squareup.okhttp3:okhttp:4.2.1'
+    // Added to for Mock Web Server for testing
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.2.1'
+    // Added Gson dependency
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

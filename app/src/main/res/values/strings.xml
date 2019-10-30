@@ -19,6 +19,7 @@
     <string name="task_counter_text">Total Tasks: </string>
     <string name="toast_no_title">Tasks must have a title.</string>
     <string name="toast_task_added_success">Task added!</string>
+    <string name="toast_error_posting_to_cloud_database">Error saving to cloud database.</string>
 
 
     <!-- All Tasks -->
