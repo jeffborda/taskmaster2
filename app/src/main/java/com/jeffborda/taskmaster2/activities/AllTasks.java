@@ -8,7 +8,7 @@ import com.jeffborda.taskmaster2.R;
 
 public class AllTasks extends AppCompatActivity {
 
-    private static final String TAG = "AllTasks";
+    private static final String TAG = "jtb.AllTasks";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

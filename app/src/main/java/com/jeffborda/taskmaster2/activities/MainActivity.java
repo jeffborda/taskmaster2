@@ -22,6 +22,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.amazonaws.amplify.generated.graphql.ListTasksQuery;
+import com.amazonaws.mobile.config.AWSConfiguration;
+import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
+import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
+import com.apollographql.apollo.GraphQLCall;
+import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jeffborda.taskmaster2.R;
@@ -36,24 +42,42 @@ import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 public class MainActivity extends AppCompatActivity implements TaskItemAdapter.OnTaskSelectedListener {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "jtb.MainActivity";
     private TaskmasterDatabase database;
+    private RecyclerView recyclerView;
     private List<Task> tasks;
+    private AWSAppSyncClient awsAppSyncClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Instantiate the tasks list
+        this.tasks = new LinkedList<>();
+        // Render Task items to the screen with RecyclerView
+        this.recyclerView = findViewById(R.id.task_items_recycler_view);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // Define Adapter class that is able to communicate with RecyclerView
+        this.recyclerView.setAdapter(new TaskItemAdapter(this.tasks, this));
+
+        // AWS Build Setup. RE: https://aws-amplify.github.io/docs/android/start?ref=amplify-android-btn
+        awsAppSyncClient = AWSAppSyncClient.builder()
+                .context(getApplicationContext())
+                .awsConfiguration(new AWSConfiguration(getApplicationContext()))
+                .build();
+        // Calls the Add Task mutation - will add sample Task to db on each run
+        //this.runAddTaskMutation();
+        // Calls the Get All Tasks query - returns a list
+        this.runGetAllTasksQuery();
+
 
         // Http Get Request
-        OkHttpClient okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url("https://taskmaster-api.herokuapp.com/tasks")
-                .build();
-        okHttpClient.newCall(request).enqueue(new LogHttpDataCallback(this));
+//        this.okHttpGetRequestToBackend();
 
         // RecyclerView Setup
         //TODO: this can be commented back in when rendering Tasks from local database
@@ -96,6 +120,21 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
     public void onResume() {
         // Required to override the method
         super.onResume();
+
+        this.setUsername();
+        this.runGetAllTasksQuery();
+    }
+
+    @Override
+    public void onTaskSelected(Task task) {
+        Log.i(TAG, "RecyclerView TextView clicked on this Task: " + task);
+        Intent taskDetailsIntent = new Intent(this, TaskDetails.class);
+        // When a Task is clicked, put its ID as an extra so it can be pulled out of database on TaskDetails activity
+        taskDetailsIntent.putExtra("task_id", task.getId());
+        MainActivity.this.startActivity(taskDetailsIntent);
+    }
+
+    private void setUsername() {
         // Setup default Shared Preferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         // Get username from Shared Preferences
@@ -109,17 +148,6 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
         else {
             mainActivityHeading.setText(username + getResources().getString(R.string.heading_with_username_main_activity));
         }
-
-        this.renderRecyclerViewFromDatabase();
-    }
-
-    @Override
-    public void onTaskSelected(Task task) {
-        Log.i(TAG, "RecyclerView TextView clicked on this Task: " + task);
-        Intent taskDetailsIntent = new Intent(this, TaskDetails.class);
-        // When a Task is clicked, put its ID as an extra so it can be pulled out of database on TaskDetails activity
-        taskDetailsIntent.putExtra("task_id", task.getId());
-        MainActivity.this.startActivity(taskDetailsIntent);
     }
 
 
@@ -138,10 +166,18 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
 
         // Re android doc: https://developer.android.com/guide/topics/ui/layout/recyclerview
         // Render Task items to the screen with RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.task_items_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        this.recyclerView = findViewById(R.id.task_items_recycler_view);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         // Define Adapter class that is able to communicate with RecyclerView
-        recyclerView.setAdapter(new TaskItemAdapter(this.tasks, this));
+        this.recyclerView.setAdapter(new TaskItemAdapter(this.tasks, this));
+    }
+
+    public void okHttpGetRequestToBackend() {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url("https://taskmaster-api.herokuapp.com/tasks")
+                .build();
+        okHttpClient.newCall(request).enqueue(new LogHttpDataCallback(this));
     }
 
     public void renderTasksListFromHttpData(String httpResponseData) {
@@ -149,15 +185,55 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
         Gson gson = new Gson();
         Type typeOf = new TypeToken<LinkedList<Task>>(){}.getType();
         this.tasks = gson.fromJson(httpResponseData, typeOf);
-        RecyclerView recyclerView = findViewById(R.id.task_items_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new TaskItemAdapter(this.tasks, this));
+        this.recyclerView = findViewById(R.id.task_items_recycler_view);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        this.recyclerView.setAdapter(new TaskItemAdapter(this.tasks, this));
     }
+
+    // GraphQL - Query the dynamo database - returns list of Tasks
+    public void runGetAllTasksQuery(){
+        awsAppSyncClient.query(ListTasksQuery.builder().build())
+                .responseFetcher(AppSyncResponseFetchers.CACHE_AND_NETWORK)
+                .enqueue(getAllTasksCallback);
+    }
+
+    private GraphQLCall.Callback<ListTasksQuery.Data> getAllTasksCallback = new GraphQLCall.Callback<ListTasksQuery.Data>() {
+
+        private static final String TAG = "jtb.getAllTasksCallback";
+
+        // Instance methods on the anon inner class
+        @Override
+        public void onResponse(@Nonnull final com.apollographql.apollo.api.Response<ListTasksQuery.Data> response) {
+            Log.i(TAG, "All tasks query: " + response.data().listTasks().items().toString());
+            Log.i(TAG, "All tasks query size: " + response.data().listTasks().items().size());
+            Handler handlerForMainThread = new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(Message inputMessage) {
+                    List<ListTasksQuery.Item> items = response.data().listTasks().items();
+                    // Clear the "old" list
+                    MainActivity.this.tasks.clear();
+                    // Go through the list of items we get back from dynamo db
+                    for(ListTasksQuery.Item item : items) {
+                        // Reconstruct the Tasks using the Task(ListTasksQuery.Item) constructor
+                        MainActivity.this.tasks.add(new Task(item));
+                    }
+                    MainActivity.this.recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            };
+            handlerForMainThread.obtainMessage().sendToTarget();
+        }
+
+        @Override
+        public void onFailure(@Nonnull ApolloException e) {
+            Log.e(TAG, "Error retrieving all tasks: " + e.getMessage());
+        }
+    };
+
 
     class LogHttpDataCallback implements Callback {
 
         private MainActivity mainActivityInstance;
-        private final static String TAG = "LogHttpDataCallback";
+        private static final String TAG = "jtb.LogHttpDataCallback";
 
         LogHttpDataCallback(MainActivity mainActivityInstance) {
             this.mainActivityInstance = mainActivityInstance;

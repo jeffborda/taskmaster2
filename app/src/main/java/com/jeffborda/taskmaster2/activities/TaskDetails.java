@@ -18,6 +18,7 @@ import com.jeffborda.taskmaster2.models.TaskmasterDatabase;
 public class TaskDetails extends AppCompatActivity {
 
     private TaskmasterDatabase database;
+    private static final String TAG = "jtb.TaskDetails";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

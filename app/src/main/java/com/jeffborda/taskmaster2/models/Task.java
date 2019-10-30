@@ -1,5 +1,7 @@
 package com.jeffborda.taskmaster2.models;
 
+import com.amazonaws.amplify.generated.graphql.ListTasksQuery;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -30,6 +32,12 @@ public class Task {
         this.title = title;
         this.description = description;
         this.taskState = taskState;
+    }
+
+    public Task(ListTasksQuery.Item item) {
+        this.title = item.title();
+        this.description = item.description();
+        this.taskState = TaskStateConverter.toStatus(item.taskState().ordinal());
     }
 
     public Task() { }

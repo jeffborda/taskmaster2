@@ -10,6 +10,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import type.CreateTaskInput;
+import type.TaskState;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +28,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.amplify.generated.graphql.CreateTaskMutation;
+import com.amazonaws.mobile.config.AWSConfiguration;
+import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
+import com.apollographql.apollo.GraphQLCall;
+import com.apollographql.apollo.exception.ApolloException;
 import com.jeffborda.taskmaster2.R;
 import com.jeffborda.taskmaster2.models.Task;
 import com.jeffborda.taskmaster2.models.TaskmasterDatabase;
@@ -34,10 +41,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
+
 public class AddTask extends AppCompatActivity {
 
-    private static final String TAG = "AddTask";
+    private static final String TAG = "jtb.AddTask";
     private TaskmasterDatabase database;
+    private AWSAppSyncClient awsAppSyncClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +55,12 @@ public class AddTask extends AppCompatActivity {
         setContentView(R.layout.activity_add_task);
 
         this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, getString(R.string.database_name)).allowMainThreadQueries().build();
+
+        // AWS Build Setup. RE: https://aws-amplify.github.io/docs/android/start?ref=amplify-android-btn
+        awsAppSyncClient = AWSAppSyncClient.builder()
+                .context(getApplicationContext())
+                .awsConfiguration(new AWSConfiguration(getApplicationContext()))
+                .build();
 
         TextView taskCounter = findViewById(R.id.addtask_task_counter);
         //TODO: Change the int variable that is being appended to the TextView taskCounter to reflect the actual number in database
@@ -66,9 +82,8 @@ public class AddTask extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_title),Toast.LENGTH_LONG).show();
                 }
                 else {
-                    addNewTask();
+                    AddTask.this.addNewTask();
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_task_added_success),Toast.LENGTH_LONG).show();
-                    // Send back to MainActivity after adding a Task
                     AddTask.this.finish();
                 }
             }
@@ -83,11 +98,15 @@ public class AddTask extends AppCompatActivity {
         String title = titleEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
 
+        // Call method to add to dynamo db
+        this.runAddTaskMutation(title, description);
+        /*
         // Call method to add to local database
         this.saveTaskToLocalDatabse(title, description);
 
         // Call method to add to cloud database
         this.saveTaskToCloudDatabase(title, description);
+         */
     }
 
     public void saveTaskToLocalDatabse(String title, String description) {
@@ -111,16 +130,34 @@ public class AddTask extends AppCompatActivity {
                 .post(requestBody)
                 .build();
         okHttpClient.newCall(request).enqueue(new AddTask.LogHttpDataCallback());
-
-//        try (Response response = okHttpClient.newCall(request).execute()) {
-//            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-//                System.out.println(response.body().string());
-//        } catch (IOException e) {
-//            Log.e(TAG, "Error Posting to Cloud Database");
-//            Log.e(TAG, e.getMessage());
-//            Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_error_posting_to_cloud_database),Toast.LENGTH_LONG).show();
-//        }
     }
+
+    // GraphQL Mutation to add a new Task to the database
+    public void runAddTaskMutation(String title, String description) {
+        CreateTaskInput createTaskInput = CreateTaskInput.builder()
+                .title(title)
+                .description(description)
+                .taskState(TaskState.NEW)
+                .build();
+        awsAppSyncClient.mutate(CreateTaskMutation.builder().input(createTaskInput).build())
+                .enqueue(addTaskMutationCallback);
+    }
+
+    // GraphQL Add Task Callback
+    public GraphQLCall.Callback<CreateTaskMutation.Data> addTaskMutationCallback = new GraphQLCall.Callback<CreateTaskMutation.Data>() {
+
+        private static final String TAG = "jtb.addTaskMutation";
+
+        @Override
+        public void onResponse(@Nonnull com.apollographql.apollo.api.Response<CreateTaskMutation.Data> response) {
+            Log.i(TAG, "Added new Task to GraphQL database!");
+        }
+
+        @Override
+        public void onFailure(@Nonnull ApolloException e) {
+            Log.e(TAG, "Error adding to GraphQL database: " + e.getMessage());
+        }
+    };
 
 
     class LogHttpDataCallback implements Callback {
