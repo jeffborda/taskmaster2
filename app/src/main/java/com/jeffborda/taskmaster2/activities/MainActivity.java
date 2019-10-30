@@ -122,6 +122,8 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
         MainActivity.this.startActivity(taskDetailsIntent);
     }
 
+
+    // TODO: Now this should be changed to update the local Room database with any changes from the cloud
     private void renderRecyclerViewFromDatabase() {
         // Build the database and instantiate the List that hold the tasks from database
         this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, getString(R.string.database_name))
@@ -173,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
             String responseBody = response.body().string();
             Log.i(TAG, "Http Response: " + responseBody);
 
-            // Now you can call another method in the MainActivity class
+            // Now you could call another method in the MainActivity class
             //mainActivityInstance.renderHttpData(responseBody);
 
             // Handler allows us to pass info from another thread back to the main thread.

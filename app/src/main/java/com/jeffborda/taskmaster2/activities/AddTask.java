@@ -150,7 +150,7 @@ public class AddTask extends AppCompatActivity {
             Handler handlerForMainThread = new Handler(Looper.getMainLooper()) {
                 @Override
                 public void handleMessage(Message inputMessage) {
-//                    addTaskActivityInstance.renderTasksListFromHttpData((String)inputMessage.obj);
+                    //TODO: Don't need to do anything here?
                 }
             };
             Message completeMessage = handlerForMainThread.obtainMessage(0, responseBody);
