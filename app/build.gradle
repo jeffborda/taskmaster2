@@ -18,6 +18,9 @@ android {
     }
 }
 
+// Added for AWS Amplify
+apply plugin: 'com.amazonaws.appsync'
+
 dependencies {
     // Added to declare Room version
     def room_version = "2.2.1"
@@ -44,4 +47,11 @@ dependencies {
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.2.1'
     // Added Gson dependency
     implementation 'com.google.code.gson:gson:2.8.6'
+    // Added AWS Amplify
+        //Base SDK
+    implementation 'com.amazonaws:aws-android-sdk-core:2.15.+'
+        //AppSync SDK
+    implementation 'com.amazonaws:aws-android-sdk-appsync:2.8.+'
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
+    implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
 }
