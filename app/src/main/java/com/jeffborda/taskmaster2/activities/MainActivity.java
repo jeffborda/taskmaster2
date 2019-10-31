@@ -23,8 +23,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.amazonaws.amplify.generated.graphql.ListTasksQuery;
+import com.amazonaws.amplify.generated.graphql.OnCreateTaskSubscription;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
+import com.amazonaws.mobileconnectors.appsync.AppSyncSubscriptionCall;
 import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
 import com.apollographql.apollo.GraphQLCall;
 import com.apollographql.apollo.exception.ApolloException;
@@ -33,6 +35,7 @@ import com.google.gson.reflect.TypeToken;
 import com.jeffborda.taskmaster2.R;
 import com.jeffborda.taskmaster2.adapters.TaskItemAdapter;
 import com.jeffborda.taskmaster2.models.Task;
+import com.jeffborda.taskmaster2.models.TaskState;
 import com.jeffborda.taskmaster2.models.TaskmasterDatabase;
 
 import org.jetbrains.annotations.NotNull;
@@ -48,40 +51,67 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
 
     private static final String TAG = "jtb.MainActivity";
     private TaskmasterDatabase database;
+    private TaskItemAdapter taskItemAdapter;
     private RecyclerView recyclerView;
     private List<Task> tasks;
     private AWSAppSyncClient awsAppSyncClient;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Instantiate the tasks list
+        // RecyclerView Setup
         this.tasks = new LinkedList<>();
-        // Render Task items to the screen with RecyclerView
         this.recyclerView = findViewById(R.id.task_items_recycler_view);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        // Define Adapter class that is able to communicate with RecyclerView
-        this.recyclerView.setAdapter(new TaskItemAdapter(this.tasks, this));
+        this.taskItemAdapter = new TaskItemAdapter(this.tasks, this);
+        this.recyclerView.setAdapter(this.taskItemAdapter);
+
+        // Room Database Build
+        this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, getString(R.string.database_name)).allowMainThreadQueries().build();
 
         // AWS Build Setup. RE: https://aws-amplify.github.io/docs/android/start?ref=amplify-android-btn
-        awsAppSyncClient = AWSAppSyncClient.builder()
+        this.awsAppSyncClient = AWSAppSyncClient.builder()
                 .context(getApplicationContext())
                 .awsConfiguration(new AWSConfiguration(getApplicationContext()))
                 .build();
-        // Calls the Add Task mutation - will add sample Task to db on each run
-        //this.runAddTaskMutation();
+
+        // AWS - Subscribe to future updates
+        OnCreateTaskSubscription subscription = OnCreateTaskSubscription.builder().build();
+        this.awsAppSyncClient.subscribe(subscription).execute(new AppSyncSubscriptionCall.Callback<OnCreateTaskSubscription.Data>() {
+            private static final String TAG = "jtb.Subscription";
+            // AWS calls this method when a new Task is created
+            @Override
+            public void onResponse(@Nonnull com.apollographql.apollo.api.Response<OnCreateTaskSubscription.Data> response) {
+                //TODO: Verify constructor usage, esp. TaskState
+                Task task = new Task(response.data().onCreateTask().title(), response.data().onCreateTask().description(), TaskState.valueOf(response.data().onCreateTask().taskState().toString()));
+                MainActivity.this.taskItemAdapter.addItem(task);
+            }
+
+            @Override
+            public void onFailure(@Nonnull ApolloException e) {
+                Log.e(TAG, "Failure in subscription callback: " + e.getMessage());
+            }
+
+            // Called after successful subscription attempt
+            @Override
+            public void onCompleted() {
+                Log.i(TAG, "Subscription successful.");
+            }
+        });
+
         // Calls the Get All Tasks query - returns a list
         this.runGetAllTasksQuery();
 
 
-        // Http Get Request
-//        this.okHttpGetRequestToBackend();
+        // Get Tasks from backend site - Http Get Request
+        //this.okHttpGetRequestToBackend();
 
-        // RecyclerView Setup
-        //TODO: this can be commented back in when rendering Tasks from local database
-//        this.renderRecyclerViewFromDatabase();
+        // Get Tasks from Room database RecyclerView
+        //this.renderRecyclerViewFromRoomDatabase();
 
 
         // Button Setup
@@ -151,25 +181,18 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
     }
 
 
-    // TODO: Now this should be changed to update the local Room database with any changes from the cloud
-    private void renderRecyclerViewFromDatabase() {
+    // TODO: Now this should be changed to synchronize the local Room database with any changes from the cloud database
+    private void renderRecyclerViewFromRoomDatabase() {
         // Build the database and instantiate the List that hold the tasks from database
         this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, getString(R.string.database_name))
                 // fallbackToDestructiveMigration will delete all entries from the database if the schema changes
                 .fallbackToDestructiveMigration()
                 .allowMainThreadQueries()
                 .build();
-        this.tasks = new LinkedList<>();
 
         // Get everything from database and put in list of tasks to be rendered by recycler view
         this.tasks.addAll(this.database.taskDao().getAll());
-
-        // Re android doc: https://developer.android.com/guide/topics/ui/layout/recyclerview
-        // Render Task items to the screen with RecyclerView
-        this.recyclerView = findViewById(R.id.task_items_recycler_view);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        // Define Adapter class that is able to communicate with RecyclerView
-        this.recyclerView.setAdapter(new TaskItemAdapter(this.tasks, this));
+        this.taskItemAdapter.notifyDataSetChanged();
     }
 
     public void okHttpGetRequestToBackend() {
@@ -180,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
         okHttpClient.newCall(request).enqueue(new LogHttpDataCallback(this));
     }
 
+    //TODO: This should be refactored if used again
     public void renderTasksListFromHttpData(String httpResponseData) {
         this.tasks = new LinkedList<>();
         Gson gson = new Gson();
@@ -217,7 +241,8 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
                         // Reconstruct the Tasks using the Task(ListTasksQuery.Item) constructor
                         MainActivity.this.tasks.add(new Task(item));
                     }
-                    MainActivity.this.recyclerView.getAdapter().notifyDataSetChanged();
+                    MainActivity.this.taskItemAdapter.notifyDataSetChanged();
+
                 }
             };
             handlerForMainThread.obtainMessage().sendToTarget();

@@ -23,6 +23,12 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         this.listener = listener;
     }
 
+    // Can use when a task needs to be added to RecyclerView
+    public void addItem(Task task) {
+        this.tasks.add(0,task);
+        this.notifyItemInserted(0);
+    }
+
     // The ViewHolder class holds on to the Fragment that we have created
     // Holds on to view data that we need
     // This is just an inner class, could be put in its own file
@@ -40,6 +46,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
             this.taskDescriptionView = itemView.findViewById(R.id.fragment_task_item_description);
         }
     }
+
 
     // RecyclerView needs us to create a new row, from scratch, for holding data
     @NonNull

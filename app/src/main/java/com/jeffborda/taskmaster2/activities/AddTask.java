@@ -54,6 +54,7 @@ public class AddTask extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
+        // Room Database Build
         this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, getString(R.string.database_name)).allowMainThreadQueries().build();
 
         // AWS Build Setup. RE: https://aws-amplify.github.io/docs/android/start?ref=amplify-android-btn
@@ -66,11 +67,11 @@ public class AddTask extends AppCompatActivity {
         //TODO: Change the int variable that is being appended to the TextView taskCounter to reflect the actual number in database
         taskCounter.append(Integer.toString(0));
 
-        final Button addTaskButton = findViewById(R.id.add_task_button);
+        Button addTaskButton = findViewById(R.id.add_task_button);
         addTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View event) {
-                // Hide keyboard on button tap
+                // Hide keyboard on button click
                 InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
