@@ -23,8 +23,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +43,8 @@ import com.jeffborda.taskmaster2.models.TaskmasterDatabase;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -89,6 +94,11 @@ public class AddTask extends AppCompatActivity {
                 }
             }
         });
+
+        //TODO: Move this block of code to the list teams mutation
+        List<String> teamNames = new LinkedList<>();
+        Spinner teamSelectionSpinner = findViewById(R.id.team_selection_spinner);
+//        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter();
     }
 
 
