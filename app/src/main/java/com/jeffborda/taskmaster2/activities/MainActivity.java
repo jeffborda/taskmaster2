@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
 
     @Override
     public void onResume() {
-        // Required to override the method
         super.onResume();
 
         this.setUsername();
@@ -217,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
     // GraphQL - Query the dynamo database - returns list of Tasks
     public void runGetAllTasksQuery(){
         awsAppSyncClient.query(ListTasksQuery.builder().build())
-                .responseFetcher(AppSyncResponseFetchers.CACHE_AND_NETWORK)
+                .responseFetcher(AppSyncResponseFetchers.NETWORK_ONLY)
                 .enqueue(getAllTasksCallback);
     }
 

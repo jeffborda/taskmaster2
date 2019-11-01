@@ -3,6 +3,13 @@ type Task @model {
   title: String!
   description: String
   taskState: TaskState!
+  task: Team @connection(name:"TeamTasks")
+}
+
+type Team @model {
+  id: ID!
+  title: String!
+  tasks: [Task] @connection(name:"TeamTasks")
 }
 
 enum TaskState {
