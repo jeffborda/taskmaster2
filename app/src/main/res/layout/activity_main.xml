@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context=".activities.MainActivity">
 
 
@@ -27,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
-            android:background="#1e78d9"
+            android:background="@color/colorPrimary"
             android:text="@string/button_home"
             android:textColor="@android:color/white" />
 
@@ -37,7 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
-            android:background="#1e78d9"
+            android:background="@color/colorPrimary"
             android:text="@string/button_add_task_add_task"
             android:textColor="@android:color/white" />
 
@@ -48,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_weight="1.0"
-            android:background="#1e78d9"
+            android:background="@color/colorPrimary"
             android:text="@string/button_all_tasks_main_activity"
             android:textColor="@android:color/white" />
 
@@ -58,7 +59,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
-            android:background="#1e78d9"
+            android:background="@color/colorPrimary"
             android:text="@string/button_settings_main_activity"
             android:textColor="@android:color/white" />
 
@@ -72,6 +73,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:fontFamily="sans-serif-condensed-medium"
+        android:textColor="@android:color/black"
         android:text="@string/heading_without_username_main_activity"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -83,9 +85,9 @@
         android:id="@+id/task_items_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:layout_marginTop="50dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"

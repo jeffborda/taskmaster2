@@ -23,6 +23,12 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         this.listener = listener;
     }
 
+    // Can use when a task needs to be added to RecyclerView
+    public void addItem(Task task) {
+        this.tasks.add(0,task);
+        this.notifyItemInserted(0);
+    }
+
     // The ViewHolder class holds on to the Fragment that we have created
     // Holds on to view data that we need
     // This is just an inner class, could be put in its own file
@@ -30,16 +36,16 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
 
         Task task;
         TextView taskTitleView;
-        TextView taskDescriptionView;
 
         // The View that is taken in here is a TaskItem Fragment
         public TaskItemViewHolder(@NonNull View itemView) {
             super(itemView);
             // Set the text/values of all the views in the fragment
             this.taskTitleView = itemView.findViewById(R.id.fragment_task_item_title);
-            this.taskDescriptionView = itemView.findViewById(R.id.fragment_task_item_description);
+//            this.taskDescriptionView = itemView.findViewById(R.id.fragment_task_item_description);
         }
     }
+
 
     // RecyclerView needs us to create a new row, from scratch, for holding data
     @NonNull
@@ -65,7 +71,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         // Set the reference of which Task
         holder.task = taskAtPosition;
         holder.taskTitleView.setText(taskAtPosition.getTitle());
-        holder.taskDescriptionView.setText(taskAtPosition.getDescription());
+//        holder.taskDescriptionView.setText(taskAtPosition.getDescription());
     }
 
     @Override

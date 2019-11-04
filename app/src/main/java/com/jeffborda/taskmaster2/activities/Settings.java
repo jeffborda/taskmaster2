@@ -19,7 +19,7 @@ import com.jeffborda.taskmaster2.R;
 
 public class Settings extends AppCompatActivity {
 
-    private static final String TAG = "Settings";
+    private static final String TAG = "jtb.Settings";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +56,9 @@ public class Settings extends AppCompatActivity {
 
 
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_username_updated_success),Toast.LENGTH_LONG).show();
-                    // Send back to MainActivity after updating username
-                    Intent mainActivityIntent = new Intent(Settings.this, MainActivity.class);
-                    startActivity(mainActivityIntent);
+
+                    // Finish the Settings activity
+                    Settings.this.finish();
                 }
 
             }

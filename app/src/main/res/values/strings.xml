@@ -16,6 +16,7 @@
     <string name="task_title_hint">Take Out Garbage</string>
     <string name="task_description">Task Description</string>
     <string name="task_description_hint">Recycle and garbage.</string>
+    <string name="spinner_team_selection_label">Select a team</string>
     <string name="task_counter_text">Total Tasks: </string>
     <string name="toast_no_title">Tasks must have a title.</string>
     <string name="toast_task_added_success">Task added!</string>

@@ -1,5 +1,7 @@
 package com.jeffborda.taskmaster2.models;
 
+import com.amazonaws.amplify.generated.graphql.ListTasksQuery;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -11,6 +13,7 @@ public class Task {
 
     @PrimaryKey(autoGenerate = true)
     private long id;
+    private String dynamoDbId;
     private String title;
     private String description;
     @TypeConverters(TaskStateConverter.class)
@@ -32,10 +35,21 @@ public class Task {
         this.taskState = taskState;
     }
 
+    public Task(ListTasksQuery.Item item) {
+        this.dynamoDbId = item.id();
+        this.title = item.title();
+        this.description = item.description();
+        this.taskState = TaskStateConverter.toStatus(item.taskState().ordinal());
+    }
+
     public Task() { }
 
     public long getId() {
         return this.id;
+    }
+
+    public String getDynamoDbId() {
+        return this.dynamoDbId;
     }
 
     public String getTitle() {
@@ -54,6 +68,10 @@ public class Task {
         this.id = id;
     }
 
+    public void setDynamoDbId(String dynamoDbId) {
+        this.dynamoDbId = dynamoDbId;
+    }
+
     void setTitle(String title) {
         this.title = title;
     }
@@ -69,6 +87,6 @@ public class Task {
     @Override
     @NonNull
     public String toString() {
-        return String.format("TITLE: %s DESCRIPTION: %s STATE: %s", this.title, this.description, this.taskState);
+        return String.format("[TITLE: %s DESCRIPTION: %s STATE: %s DYNAMODB_ID: %s]", this.title, this.description, this.taskState, this.dynamoDbId);
     }
 }

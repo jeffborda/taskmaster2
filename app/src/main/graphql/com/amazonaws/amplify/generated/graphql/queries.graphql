@@ -1,0 +1,66 @@
+# this is an auto generated file. This will be overwritten
+query GetTask($id: ID!) {
+  getTask(id: $id) {
+    id
+    title
+    description
+    taskState
+    task {
+      id
+      title
+      tasks {
+        nextToken
+      }
+    }
+  }
+}
+query ListTasks(
+  $filter: ModelTaskFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTasks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      title
+      description
+      taskState
+      task {
+        id
+        title
+      }
+    }
+    nextToken
+  }
+}
+query GetTeam($id: ID!) {
+  getTeam(id: $id) {
+    id
+    title
+    tasks {
+      items {
+        id
+        title
+        description
+        taskState
+      }
+      nextToken
+    }
+  }
+}
+query ListTeams(
+  $filter: ModelTeamFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTeams(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      title
+      tasks {
+        nextToken
+      }
+    }
+    nextToken
+  }
+}
