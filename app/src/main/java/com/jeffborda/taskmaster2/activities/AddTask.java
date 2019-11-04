@@ -11,6 +11,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import type.CreateTaskInput;
+import type.CreateTeamInput;
 import type.TaskState;
 
 import android.content.Context;
@@ -32,13 +33,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.amplify.generated.graphql.CreateTaskMutation;
+import com.amazonaws.amplify.generated.graphql.CreateTeamMutation;
+import com.amazonaws.amplify.generated.graphql.ListTeamsQuery;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
+import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
 import com.apollographql.apollo.GraphQLCall;
 import com.apollographql.apollo.exception.ApolloException;
 import com.jeffborda.taskmaster2.R;
 import com.jeffborda.taskmaster2.models.Task;
 import com.jeffborda.taskmaster2.models.TaskmasterDatabase;
+import com.jeffborda.taskmaster2.models.Team;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -68,6 +73,9 @@ public class AddTask extends AppCompatActivity {
                 .awsConfiguration(new AWSConfiguration(getApplicationContext()))
                 .build();
 
+        // Run query to get all teams
+        this.runGetAllTeamsQuery();
+
         TextView taskCounter = findViewById(R.id.addtask_task_counter);
         //TODO: Change the int variable that is being appended to the TextView taskCounter to reflect the actual number in database
         taskCounter.append(Integer.toString(0));
@@ -94,11 +102,6 @@ public class AddTask extends AppCompatActivity {
                 }
             }
         });
-
-        //TODO: Move this block of code to the list teams mutation
-        List<String> teamNames = new LinkedList<>();
-        Spinner teamSelectionSpinner = findViewById(R.id.team_selection_spinner);
-//        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter();
     }
 
 
@@ -118,6 +121,25 @@ public class AddTask extends AppCompatActivity {
         // Call method to add to cloud database
         this.saveTaskToCloudDatabase(title, description);
          */
+    }
+
+    public void addNewTeam() {
+        Log.i(TAG, "addNewTeam() method called");
+//        String team1 = "Team Android";
+//        String team2 = "Team JavaScript";
+//        String team3 = "Team C#";
+//        String team4 = "Team Python";
+//        this.runAddTeamMutation(team1);
+//        this.runAddTeamMutation(team2);
+//        this.runAddTeamMutation(team3);
+//        this.runAddTeamMutation(team4);
+    }
+
+    // Returns a list of all the teams in the dynamo db
+    public void runGetAllTeamsQuery() {
+        awsAppSyncClient.query(ListTeamsQuery.builder().build())
+                .responseFetcher(AppSyncResponseFetchers.NETWORK_ONLY)
+                .enqueue(getAllTeamsCallback);
     }
 
     public void saveTaskToLocalDatabse(String title, String description) {
@@ -155,7 +177,7 @@ public class AddTask extends AppCompatActivity {
     }
 
     // GraphQL Add Task Callback
-    public GraphQLCall.Callback<CreateTaskMutation.Data> addTaskMutationCallback = new GraphQLCall.Callback<CreateTaskMutation.Data>() {
+    private GraphQLCall.Callback<CreateTaskMutation.Data> addTaskMutationCallback = new GraphQLCall.Callback<CreateTaskMutation.Data>() {
 
         private static final String TAG = "jtb.addTaskMutation";
 
@@ -166,7 +188,63 @@ public class AddTask extends AppCompatActivity {
 
         @Override
         public void onFailure(@Nonnull ApolloException e) {
-            Log.e(TAG, "Error adding to GraphQL database: " + e.getMessage());
+            Log.e(TAG, "Error adding Task to GraphQL database: " + e.getMessage());
+        }
+    };
+
+    // GraphQL List Teams Callback
+    private GraphQLCall.Callback<ListTeamsQuery.Data> getAllTeamsCallback = new GraphQLCall.Callback<ListTeamsQuery.Data>() {
+
+        private static final String TAG = "jtb.getAllTeamsCallback";
+
+        @Override
+        public void onResponse(@Nonnull final com.apollographql.apollo.api.Response<ListTeamsQuery.Data> response) {
+
+            Handler handlerForMainThread = new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(Message inputMessage) {
+                    Log.i(TAG, "Inside the response thread.");
+                    // TODO: #2 Change this to a list of Teams
+                    List<String> teams = new LinkedList<>();
+                    List<ListTeamsQuery.Item> items = response.data().listTeams().items();
+                    for(ListTeamsQuery.Item item : items) {
+                        // TODO: #3 Removed the call to toString() when reconstructing teams
+                        teams.add(new Team(item.id(), item.title()).toString());
+                    }
+                    Spinner teamSelectionSpinner = findViewById(R.id.team_selection_spinner);
+                    // TODO: #1 Change adapter type to Team, so that we can store the id for when it's clicked on
+                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(AddTask.this, android.R.layout.simple_spinner_dropdown_item, teams);
+                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    teamSelectionSpinner.setAdapter(spinnerAdapter);
+                }
+            };
+            handlerForMainThread.obtainMessage().sendToTarget();
+        }
+
+        @Override
+        public void onFailure(@Nonnull ApolloException e) {
+            Log.e(TAG, "Error when query list all teams: " + e.getMessage());
+        }
+    };
+
+    public void runAddTeamMutation(String teamName) {
+        CreateTeamInput createTeamInput = CreateTeamInput.builder()
+                .title(teamName)
+                .build();
+        awsAppSyncClient.mutate(CreateTeamMutation.builder().input(createTeamInput).build())
+                .enqueue(addTeamMutationCallback);
+    }
+
+    public GraphQLCall.Callback<CreateTeamMutation.Data> addTeamMutationCallback = new GraphQLCall.Callback<CreateTeamMutation.Data>() {
+        private static final String TAG = "jtb.addTeamMutation";
+        @Override
+        public void onResponse(@Nonnull com.apollographql.apollo.api.Response<CreateTeamMutation.Data> response) {
+            Log.i(TAG, "Added new Team to GraphQL database!");
+        }
+
+        @Override
+        public void onFailure(@Nonnull ApolloException e) {
+            Log.e(TAG, "Error adding Team to GraphQL database: " + e.getMessage());
         }
     };
 

@@ -36,14 +36,13 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
 
         Task task;
         TextView taskTitleView;
-        TextView taskDescriptionView;
 
         // The View that is taken in here is a TaskItem Fragment
         public TaskItemViewHolder(@NonNull View itemView) {
             super(itemView);
             // Set the text/values of all the views in the fragment
             this.taskTitleView = itemView.findViewById(R.id.fragment_task_item_title);
-            this.taskDescriptionView = itemView.findViewById(R.id.fragment_task_item_description);
+//            this.taskDescriptionView = itemView.findViewById(R.id.fragment_task_item_description);
         }
     }
 
@@ -72,7 +71,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         // Set the reference of which Task
         holder.task = taskAtPosition;
         holder.taskTitleView.setText(taskAtPosition.getTitle());
-        holder.taskDescriptionView.setText(taskAtPosition.getDescription());
+//        holder.taskDescriptionView.setText(taskAtPosition.getDescription());
     }
 
     @Override

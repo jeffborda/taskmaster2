@@ -159,8 +159,11 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
         Log.i(TAG, "RecyclerView TextView clicked on this Task: " + task);
         Intent taskDetailsIntent = new Intent(this, TaskDetails.class);
         // When a Task is clicked, put its ID as an extra so it can be pulled out of database on TaskDetails activity
-        taskDetailsIntent.putExtra("task_id", task.getId());
-        MainActivity.this.startActivity(taskDetailsIntent);
+        taskDetailsIntent.putExtra("task_dynamo_db_id", task.getDynamoDbId());
+        taskDetailsIntent.putExtra("task_title", task.getTitle());
+        taskDetailsIntent.putExtra("task_description", task.getDescription());
+        taskDetailsIntent.putExtra("task_state", task.getTaskState().toString());
+        startActivity(taskDetailsIntent);
     }
 
     private void setUsername() {
@@ -238,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements TaskItemAdapter.O
                     // Go through the list of items we get back from dynamo db
                     for(ListTasksQuery.Item item : items) {
                         // Reconstruct the Tasks using the Task(ListTasksQuery.Item) constructor
+                        Log.i(TAG, "Item id: " + item.id());
                         MainActivity.this.tasks.add(new Task(item));
                     }
                     MainActivity.this.taskItemAdapter.notifyDataSetChanged();

@@ -71,6 +71,14 @@
             android:importantForAutofill="no"
             android:inputType="textAutoCorrect" />
 
+        <TextView
+            android:id="@+id/spinner_team_selection_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="@string/spinner_team_selection_label"
+            android:layout_marginTop="25dp"/>
+
         <Spinner
             android:id="@+id/team_selection_spinner"
             android:layout_width="match_parent"

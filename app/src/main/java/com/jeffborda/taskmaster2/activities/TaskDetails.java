@@ -27,25 +27,12 @@ public class TaskDetails extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        // TODO: Deal with the case where no matching id was found
-        // Get the id from the task that was clicked
-        long taskId = intent.getExtras().getLong("task_id");
-        // Setup the database
-        this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, getString(R.string.database_name))
-                // fallbackToDestructiveMigration will delete all entries from the database if the schema changes
-                .fallbackToDestructiveMigration()
-                .allowMainThreadQueries()
-                .build();
-
-        // Make the entry into a Task again from database result
-        Task task = this.database.taskDao().getTaskById(taskId);
-
         EditText titleEditText = findViewById(R.id.task_details_title);
         EditText descriptionEditText = findViewById(R.id.task_details_description);
         TextView statusTextView = findViewById(R.id.task_details_state);
-        titleEditText.setText(task.getTitle());
-        descriptionEditText.setText(task.getDescription());
-        statusTextView.setText(task.getTaskState().toString());
+        titleEditText.setText(intent.getExtras().getString("task_title"));
+        descriptionEditText.setText(intent.getExtras().getString("task_description"));
+        statusTextView.setText(intent.getExtras().getString("task_state"));
 
         //TODO: These need some other type of listener, like on text change or something
         //On click listeners to display the save button
@@ -63,5 +50,21 @@ public class TaskDetails extends AppCompatActivity {
                 saveButton.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    public Task getTaskFromRoomDatabase() {
+        Intent intent = getIntent();
+        // TODO: Deal with the case where no matching id was found
+        // Get the id from the task that was clicked
+        long taskId = intent.getExtras().getLong("task_id");
+        // Setup the database
+        this.database = Room.databaseBuilder(getApplicationContext(), TaskmasterDatabase.class, getString(R.string.database_name))
+                // fallbackToDestructiveMigration will delete all entries from the database if the schema changes
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
+
+        // Make the entry into a Task again from database result
+        return this.database.taskDao().getTaskById(taskId);
     }
 }

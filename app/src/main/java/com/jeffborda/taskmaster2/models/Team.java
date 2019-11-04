@@ -11,8 +11,14 @@ public class Team {
 
     public Team() { }
 
-    public Team(String title) {
+    public Team(String id, String title) {
+        this.id = id;
         this.title = title;
         this.teamTasks = new LinkedList<>();
+    }
+
+    @Override
+    public String toString() {
+        return this.title;
     }
 }
